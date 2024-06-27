@@ -1,0 +1,35 @@
+[
+    {
+       
+        "params" : 1,
+        "types" : ["pourcentage" ],
+        "decs_param" : ["Le pourcentage de support pour la frequence", "Le pourcentage de support pour le max"], 
+        "description" : "Mining Frequent Maximal Itemsets",
+        "all_algo" : ["Apriori", "AprioriTID"],
+        "traductionEnContraintes" : "arithm(freq, >=, (int) Math.ceil(database.getNbTransactions() * ${0})) | coverClosure(database, x); | coverSize(database, freq, x)"
+    },
+
+    {
+        "params" : 1,
+        "types" : ["pourcentage"],
+        "decs_param" : ["Le pourcentage de support pour le close"],
+        "description" : "Mining Frequent Closed Itemsets", 
+        "all_algo" : ["AprioriClose", "LCM"],
+        "traductionEnContraintes" : "arithm(freq, >=, (int) Math.ceil(database.getNbTransactions() * ${0})) | coverClosure(database, x); | coverSize(database, freq, x)"
+    },
+    {
+        "params" : 1,
+        "types" : ["pourcentage"],
+        "decs_param" : ["Le pourcentage de support pour le maximal"],
+        "description" : "Mining Frequent Maximal Itemsets",
+        "all_algo" : ["FPMax"]    
+    },
+    {
+        "params" : 1,
+        "types" : ["pourcentage"],
+        "decs_param" : ["Le pourcentage de support pour le minier"],
+        "description" : "Mining Frequent Generator Itemsets",
+        "all_algo" : ["DefMe"]
+    
+    }
+]

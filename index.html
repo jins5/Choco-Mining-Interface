@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Scientific Model Customization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="public/css/output.css" rel="stylesheet">
+    <link href="public/css/global.css" rel="stylesheet">
+
+    <style>
+       
+    </style>
+</head>
+
+<body class="bg-gray-100 p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 md:p-6">
+        <div id="right-card" class="rounded-lg border bg-gray-200 shadow-sm p-6 relative min-h-[50vh] loading-container">
+            <div class="flex flex-col space-y-1.5 mb-4">
+                <h3 class="text-2xl font-semibold leading-none tracking-tight">Model Preview</h3>
+                <p class="text-sm text-gray-600">Interactive visualization of the scientific model.</p>
+                <div class="flex items-center mt-2 hidden" id="file-info">
+                    <div id="file-name" class="unix-font text-left"></div>
+                    <button id="file-edit-button" class="ml-2">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                <div id="variables-card" class="variables-card rounded-lg border p-4 mt-4 w-full">
+                    <h4 class="text-xl font-semibold leading-none tracking-tight mb-2">Variables</h4>
+                    <div id="java-output" class="unix-font text-left mt-2"></div>
+                    <div class="mt-4 flex">
+                        <div>
+                            <label for="max-solutions" class="text-sm font-medium">Max Solutions:</label>
+                            <div class="flex items-center mt-2">
+                                <select id="max-solutions-select" class="border border-gray-300 rounded-md px-2 py-1 mr-2">
+                                    <option value="∞">∞ (All Solutions)</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <input type="number" id="max-solutions-input"
+                                    class="border border-gray-300 rounded-md px-2 py-1 w-24 hidden" min="1"
+                                    placeholder="Enter number">
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <label for="item-edit-input" class="text-sm font-medium">Item Pattern:</label>
+                            <input type="text" id="item-edit-input" class="border border-gray-300 rounded-md px-2 py-1 w-full mr-2"
+                                placeholder="e.g., @ITEM=<item>=<name>">
+                            <div id="item-edit-error" class="text-red-500 text-sm hidden">No pattern found</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="constraints-card" class="constraints-card rounded-lg border p-4 mt-4 w-full">
+                    <h4 class="text-xl font-semibold leading-none tracking-tight mb-2" id="constraints-title">
+                        Constraints</h4>
+                    <div id="constraints-list" class="unix-font"></div>
+                </div>
+                <div id="database-info-card" class="rounded-lg border p-4 mt-4 w-full hidden">
+                    <h4 class="text-xl font-semibold leading-none tracking-tight mb-2">Database Info</h4>
+                    <div id="database-info" class="unix-font text-left mt-2"></div>
+                </div>
+            </div>
+            <div class="p-6 flex flex-col items-start justify-center h-full" id="file-btn-div">
+                <button id="file-upload-button" class="bg-yellow-500 text-black rounded-md px-4 py-2">Upload File</button>
+            </div>
+            <button id="run-button"
+                class="hidden bg-green-500 text-white rounded-full p-3 absolute right-4 top-[2rem] flex items-center loading-container">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M10 5a1 1 0 01.993.883L11 6v5h3a1 1 0 01.117 1.993L14 13h-4a1 1 0 01-.117-1.993L10 11h3V6a1 1 0 01.993-.883L14 5H10z"
+                        clip-rule="evenodd" />
+                </svg>
+                Run
+            </button>
+            <button id="export-java-button"
+                class="hidden bg-blue-500 text-white rounded-md px-4 py-2 absolute left-4 bottom-4">Export Java</button>
+        </div>
+        <div class="rounded-lg border bg-white shadow-sm p-6">
+            <div class="flex flex-col space-y-1.5 mb-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-2xl font-semibold leading-none tracking-tight" id="model-header">Choose Your Model</h3>
+                        <p class="text-sm text-gray-600" id="model-description">Define the parameters and constraints of your scientific model.</p>
+                    </div>
+                    <button id="advanced-mode-button" class="bg-gray-500 text-white rounded-md px-4 py-2" disabled>Advanced Mode</button>
+                </div>
+            </div>
+            <div class="grid gap-4">
+                <div class="grid gap-2" id="algorithm-dropdown-wrapper">
+                    <label class="text-sm font-medium" for="model-type">Algorithm</label>
+                    <select id="model-type"
+                        class="input-category flex h-10 items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        disabled>
+                        <option value="">Select an Algorithm</option>
+                    </select>
+                </div>
+                <div class="grid gap-2 relative hidden" id="constraints-wrapper">
+                    <label class="text-sm font-medium" for="constraints">Constraints</label>
+                    <input id="constraints"
+                        class="input-category flex h-10 items-center justify-between rounded-md border border-gray-300 bg-gray-200 text-gray-500 px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        placeholder="Start typing to see suggestions..." disabled>
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                </div>
+                <div id="dynamic-fields" class="grid gap-2"></div>
+                <div class="flex justify-center mt-2">
+                    <button id="choose-model-button"
+                        class="bg-blue-500 text-white rounded-md px-4 py-2 w-full hidden">Choose This Model</button>
+                    <button id="add-button" class="bg-blue-500 text-white rounded-md px-4 py-2 w-full hidden">Add Constraint</button>
+                </div>
+                <input type="file" id="file-input" class="hidden">
+            </div>
+        </div>
+    </div>
+    <div id="results-card" class="results-card rounded-lg border w-full p-4 mt-4 z-30 loading-container ">
+        <button id="export-results-button"
+            class="bg-blue-500 text-white rounded-md px-4 py-2 absolute top-4 right-4 hidden">Export Results</button>
+        <h4 class="text-xl font-semibold leading-none tracking-tight mb-2">Results</h4>
+        <input type="text" id="search-input" class="w-full mb-4 p-2 border border-gray-300 rounded-md"
+            placeholder="Search... (e.g., 4:freq, 2:solution)">
+        <div id="results-list" class="unix-font"></div>
+        <table id="results-table" class="min-w-full bg-white">
+            <thead>
+                <tr>
+                    <th class="cursor-pointer" data-column="solution">Solution</th>
+                    <th class="cursor-pointer" data-column="freq">Freq</th>
+                </tr>
+            </thead>
+            <tbody id="results-body"></tbody>
+        </table>
+        <div id="pagination-controls" class="flex justify-center mt-4"></div>
+    </div>
+    <div id="confirmation-message" class="mt-6 text-green-600"></div>
+
+    <div id="error-popup" class="popup">
+        <span class="close">&times;</span>
+        <h3>Error Verifying Constraints</h3>
+        <div id="error-details"></div>
+    </div>
+
+    <div id="export-popup" class="popup">
+        <span class="close">&times;"></span>
+        <h3>Export Results</h3>
+        <div>
+            <label>
+                <input type="radio" name="export-filters" value="with-filters" checked> With Filters
+            </label>
+            <label>
+                <input type="radio" name="export-filters" value="without-filters"> Without Filters
+            </label>
+        </div>
+        <div class="mt-4">
+            <label>
+                <input type="radio" name="export-format" value="csv" checked> CSV
+            </label>
+            <label>
+                <input type="radio" name="export-format" value="txt"> TXT
+            </label>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button id="export-confirm-button" class="bg-blue-500 text-white rounded-md px-4 py-2">Export</button>
+        </div>
+    </div>
+
+    
+    <script>
+        let isModified = false;
+
+        function markAsModified() {
+            isModified = true;
+        }
+
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('change', markAsModified);
+        });
+
+        window.addEventListener('beforeunload', (event) => {
+            if (isModified) {
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        });
+    </script>
+     <script src="public/js/main.js"></script>
+
+</body>
+
+</html>

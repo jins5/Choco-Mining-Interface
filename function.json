@@ -1,0 +1,42 @@
+[
+    {
+        "name": "arithm",
+        "signatures": [
+            {
+                "params": 3,
+                "types": ["IntVar", "operator", "IntVar_Ou_Pourcentage"],
+                "template": "model.arithm(${0}, \"${1}\", ${2}).post();"
+            }
+        ]
+    },
+    {
+        "name": "sum",
+        "signatures": [
+            {
+                "params": 3,
+                "types": ["BoolVar[]", "operator", "IntVar"],
+                "template": "model.sum(${0}, \"${1}\", ${2}).post();"
+            }
+        ]
+    },
+    {
+        "name": "coverSize",
+        "signatures": [
+            {
+                "params": 3,
+                "types": ["TransactionalDatabase", "IntVar", "BoolVar[]"],
+                "template": "ConstraintFactory.coverSize(${0}, ${1}, ${2}).post();"
+            }
+        ]
+    },
+    {
+        "name": "coverClosure",
+        "signatures": [
+            {
+                "params": 2,
+                "types": ["TransactionalDatabase", "BoolVar[]"],
+                "template": "ConstraintFactory.coverClosure(${0}, ${1}).post();"
+            }
+        ]
+    }
+]
